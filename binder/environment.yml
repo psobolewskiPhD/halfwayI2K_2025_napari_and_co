@@ -2,13 +2,13 @@ name: binder
 channels:
   - conda-forge
 dependencies:
-  - python=3.12
+  - python=3.13
   - jupyterlab
   - jupytext
   - jupyterlab-myst
   - napari
   - pyqt
-  - jupyter-book
+  - jupyter-book<2
   - websockify
   - pip
   - pip:
