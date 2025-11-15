@@ -1,8 +1,8 @@
-name: intro-napari-workshop
+name: napari-jupyter-workshop
 channels:
   - conda-forge
 dependencies:
-  - python=3.12
+  - python=3.13
   - jupyterlab
   - jupytext
   - jupyterlab-myst
