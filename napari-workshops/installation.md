@@ -3,18 +3,24 @@
 napari is a Python application and package, so it requires a working Python installation.
 There are multiple ways that Python installations and packages can be managed. For a detailed
 breakdown, we recommend [this excellent guide and tutorial by Talley Lambert (Harvard Medical School)](https://hackmd.io/@talley/SJB_lObBi).
-For the purposes of this workshop, for consistency, we will use [`conda`](https://docs.conda.io/en/latest/) as the Python, package, and environment manager.
+
+For the purposes of this workshop, you will need an environment with Python, napari, and Jupyter installed. You can use the tool of your choice to achieve this, but here, for consistency, we will use [`conda`](https://docs.conda.io/en/latest/) as the Python, package, and environment manager.
 
 ```{tip}
-The first session of this workshop will be focused on using the napari application.  
-If you are not comfortable with Python and the command line, you can install and use the napari bundled application, instead of following the instructions on this page. This will allow you to use a graphical interface to install napari and then run it as an ordinary, stand-alone application:
-- Windows: [napari-0.6.1-Windows-x86_64.exe](https://github.com/napari/napari/releases/download/v0.6.1/napari-0.6.1-Windows-x86_64.exe)
-- macOS: [napari-0.6.1-macOS-arm64.dmg](https://github.com/napari/napari/releases/download/v0.6.1/napari-0.6.1-macOS-arm64.pkg)
+**If you are not comfortable with Python and the command line**, or just want to get started quickly,you can [install and use the napari bundled application](https://napari.org/stable/tutorials/fundamentals/installation_bundle_conda.html), instead of following the remaining instructions on this page.
+To to follow along with the notebooks without needing to write code, you will also need to install the `napari-workshop-browser` plugin:
 
-For the second session, which will use Jupyter notebooks, you can [install the `napari-workshop-browser` plugin](plugins.md#napari-workshop-browser), which will allow you to follow along with the notebooks without needing to write code. We will cover installing plugins using the GUI during the first session.
+* In napari, open the menu**Plugins**>**Install/Uninstall Plugins...**
+* Search for **workshop** in the top search/filter bar, and then, in the bottom pane, you will see all of the plugins that match this search term.
+* Click the blue install button to install the **Napari Workshop Browser** plugin.
+* Once installed, go to the menu **Plugins**>**Open a napari workshop** to open the widget.
+* To download the correct notebooks, **delete the pre-filled URL** in the widget and copy-paste the following URL instead:
+`https://github.com/psobolewskiPhD/halfwayI2K_2025_napari_and_co/archive/refs/heads/main.zip`
+* Click the `Launch Workshop` button. This will **hide the running napari application**, download the notebooks, and open a Jupyter session in your browser with the notebooks ready to go.
+* When you are finished with the notebooks, to return to napari, click the `Quit` button at the top of the **first Jupyter browser tab** that has the listing of all of the notebooks. Then you can restore the original napari window and keep using it or quit napari.
 ```
 
-## Installing Python using `conda`
+## Installing Python using `conda`, *if you don't already have a tool to manage Python environments*
 
 In this tutorial, we will install Python via miniforge, a distribution of
 Python based in the [conda package manager](https://docs.conda.io/en/latest/).
@@ -26,7 +32,7 @@ Before you start, check if you have `conda` installed using:
 conda info
 ```
 
-We recommend that you use conda version is >23.10 and that you are using 
+We recommend that you use conda version is >23.10 and that you are using
 [`conda-forge` channels](https://conda-forge.org/docs/user/introduction/). You can ensure this using the following commands in your `(base)` environment:
 
 ```bash
@@ -37,7 +43,7 @@ conda config --add channels conda-forge
 Once you have that set, you can skip to [the next section](setting-up-your-napari-workshop-environment).
 ````
 
-1. In your web browser,  go to:  
+1. In your web browser,  go to:
 [https://conda-forge.org/download/](https://conda-forge.org/download/)
 2. Click on the tile corresponding to your platform (e.g., Windows, macOS, or Linux) to download the installer. If you are unsure about your macOS or Linux architecture, open a command line terminal and run:
 
@@ -51,13 +57,13 @@ Once you have that set, you can skip to [the next section](setting-up-your-napar
    curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
    ```
 
-3. Once you have downloaded miniforge installer, run it to install conda. Note: you may need 
+3. Once you have downloaded miniforge installer, run it to install conda. Note: you may need
    admin permissions during the installation process.
-   
+
    ### Windows
 
-   1. Find the file you downloaded (e.g. in your Downloads directory), it should look like `Miniforge3-Windows-x86_64.exe`. 
-   2. Double-click with the left mouse button to execute it. 
+   1. Find the file you downloaded (e.g. in your Downloads directory), it should look like `Miniforge3-Windows-x86_64.exe`.
+   2. Double-click with the left mouse button to execute it.
    3. Follow the instructions to complete the installation. We recommend checking the options to "Create start menu shortcuts" and "Add Miniforge3 to my PATH environment variable".
    4. Once the installation has completed, you can verify it was correctly installed by searching for the “Miniforge Prompt” in your Start menu.
 
@@ -76,10 +82,10 @@ Once you have that set, you can skip to [the next section](setting-up-your-napar
    bash Miniforge3-$(uname)-$(uname -m).sh
    ```
 
-   4. The installer will walk you through a series of prompts to complete the installation. We recommend that you use the default installation location, but you can change it to a different location in your user directory if you prefer. 
+   4. The installer will walk you through a series of prompts to complete the installation. We recommend that you use the default installation location, but you can change it to a different location in your user directory if you prefer.
 
-   5. Once the installation finishes, the installer will ask:  
-   `Do you wish to update your shell profile to automatically initialize conda?`  
+   5. Once the installation finishes, the installer will ask:
+   `Do you wish to update your shell profile to automatically initialize conda?`
    We recommend you answer `yes` to this question. This will add the necessary lines to your shell profile to ensure that `conda` is added to your PATH variable and properly initialized when you open a new shell. Note: For changes to take effect, you will need to close and re-open your current shell.
 
    6. Once the installation has completed, you can verify it was correctly installed by opening a new command line. You should see `(base)` next to your command line prompt. Additionally, the following command:
@@ -113,6 +119,9 @@ Once you have that set, you can skip to [the next section](setting-up-your-napar
 
 ## Setting up your napari workshop environment
 
+Here we will use `conda` to create an environment with Python 3.13, napari, and Jupyter.
+You can use the tool of your choice, the [PyPI](https://pypi.org) packages are: `napari[all]` and `jupyterlab`.
+
 1. Open your terminal.
    - **Windows**: Open the "miniforge prompt" from your start menu
    - **Mac OS**: Open Terminal (you can search for it in spotlight - `cmd` +
@@ -121,24 +130,24 @@ Once you have that set, you can skip to [the next section](setting-up-your-napar
 2. We will use a virtual environment to encapsulate the Python tools used for this workshop.
    This ensures that the requirements for this workshop do not interfere with
    any other Python projects. To create the environment (named
-   `intro-napari-workshop`) with Python 3.12 in it, enter the following command:
+   `napari-I2K-workshop`) with Python 3.13 in it, enter the following command:
 
     ```bash
-    conda create -n intro-napari-workshop -c conda-forge python=3.12 napari pyqt jupyterlab
+    conda create -n napari-I2K-workshop -c conda-forge python=3.13 napari pyqt jupyterlab
     ```
 
 3. Once the environment setup has finished, activate the environment:
 
     ```bash
-    conda activate intro-napari-workshop
+    conda activate napari-I2K-workshop
     ```
 
     If you successfully activated the environment, you should now see
-   `(intro-napari-workshop)` to the left of your command prompt.
+   `(napari-I2K-workshop)` to the left of your command prompt.
 
    ```{important}
-   Remember to activate the right environment for what you need! And always 
-   double-check that the activated environment is the one you want before installing any 
+   Remember to activate the right environment for what you need! And always
+   double-check that the activated environment is the one you want before installing any
    packages—you never want to install into the `base` environment.
    ```
 
@@ -153,11 +162,11 @@ Once you have that set, you can skip to [the next section](setting-up-your-napar
     ```
 
 5. Test your napari installation. Enter the command below and an empty napari
-   viewer should open. You can close the window after it opens using the File menu. 
-   Please note that it takes a bit of extra time (as much as 60 s) to launch napari 
+   viewer should open. You can close the window after it opens using the File menu.
+   Please note that it takes a bit of extra time (as much as 60 s) to launch napari
    the first time, particularly if your computer has security and virus scan applications
    running.
-    
+
     ```bash
     napari
     ```

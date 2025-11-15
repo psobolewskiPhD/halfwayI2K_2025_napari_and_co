@@ -11,18 +11,19 @@ python <name of script>.py
 
 ```{tip}
 You can find a wide range of napari scripts in [the examples Gallery](https://napari.org/stable/gallery.html).
+As of napari 0.6.5, [`napari` can even run scripts directly](https://napari.org/stable/tutorials/fundamentals/features.html#running-python-scripts-with-napari), using `napari <name of script>.py` or drag-and-drop!
 ```
 
 ## Starting the Qt event loop
 
 However, there is one important aspect, which is [the Qt event loop](https://napari.org/stable/guides/event_loop.html#an-introduction-to-the-event-loop-in-napari). napari uses a GUI backend which
-"listens" to various `events` (mouse clicks, drags, functions/methods being called, etc.) to 
-enable interactions. These `events` are managed in a queue called the `event loop`.   
+"listens" to various `events` (mouse clicks, drags, functions/methods being called, etc.) to
+enable interactions. These `events` are managed in a queue called the `event loop`.
 
-In an interactive Python environment, like a Jupyter notebook or iPython REPL, napari will use their 
-integrated Qt event loop, allowing you to interact with the napari GUI. However, when using napari 
-in a script, if you want the user to be able to interact with the napari GUI, you will need to 
-explicitly "start the application", blocking further execution of the script and allowing the user 
+In an interactive Python environment, like a Jupyter notebook or iPython REPL, napari will use their
+integrated Qt event loop, allowing you to interact with the napari GUI. However, when using napari
+in a script, if you want the user to be able to interact with the napari GUI, you will need to
+explicitly "start the application", blocking further execution of the script and allowing the user
 to interact the napari GUI. The way to do this is to add the following line of code to your script:
 
 ```Python
@@ -31,7 +32,7 @@ napari.run()
 
 Any code before this line will be executed as normal: you can set up a viewer, add some layers, etc.
 Then when this line is executed, the viewer will be shown and allow for GUI interaction, but further
-script execution will be blocked. 
+script execution will be blocked.
 
 ```{important}
 Any code below the `napari.run()` line will not be executed until the viewer is closed!
@@ -76,10 +77,10 @@ napari was closed!
 ## A few napari scripting tips
 
 1. If your script has classes or functions, you may want to be able to the the script as a module, so
-   you can re-use them in other scripts. But remember, when you import a module, Python will execute 
-   the code in it. In this case, you probably *don't* want to start the event loop. So it's a good 
+   you can re-use them in other scripts. But remember, when you import a module, Python will execute
+   the code in it. In this case, you probably *don't* want to start the event loop. So it's a good
    idea to put a guard around `napari.run()` to ensure that this is only executed when run as a script.
-   
+
    ```Python
    if __name__ == '__main__':
      napari.run()
