@@ -17,7 +17,7 @@ One need for bioimage analysts is to interactively perform analysis on images. T
 
 **[napari](https://napari.org/)** makes such interactive analyses easy because of its easy coupling with Python and Scientific Python ecosystem, including tools like **[numpy](https://numpy.org/)** and **[scikit-image](https://scikit-image.org/)**.
 
-## Setup
+## (Optional) Preparing to run this notebook on mybinder.org
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -28,17 +28,52 @@ if 'BINDER_SERVICE_HOST' in os.environ:
     os.environ['DISPLAY'] = ':1.0'
 ```
 
-As previously, we start by importing `napari`, our `nbscreenshot` utility, and instantiating an empty viewer.
+## Setup
+
+As previously, we start by importing `napari` and instantiating an empty viewer.
 
 ```{code-cell} ipython3
 import napari
-from napari.utils import nbscreenshot
 
-# Create an empty viewer
+# Create an empty viewer named viewer
 viewer = napari.Viewer()
 ```
 
-Let's read the same `cells3d` image from previous lessons and view it in napari:
+You should now have a `napari` viewer open. However, unlike other Jupyter widgets, the napari viewer is not embedded inside the jupyter notebook.
+
+## Capturing the status of the viewer with `nbscreenshot`
+
+We can take a screenshot of the current state of napari viewer and embed that in the notebook. This can be useful for making note of or sharing key steps in an analysis which makes use of interactive components.
+
+To do this, we use the `nbscreenshot` utility function
+
+```{code-cell} ipython3
+from napari.utils import nbscreenshot
+
+nbscreenshot(viewer)
+```
+
+By default, this will capture and embed the entire viewer. However, if you only want to capture the canvas, you can pass `canvas_only=True` to the function.
+
+## Loading image data
+
+napari can take any NumPy-like array as input for its image layer, for example a
+[numpy array](https://numpy.org/doc/stable/reference/generated/numpy.array.html),
+a [dask array](https://docs.dask.org/en/stable/array.html), a
+[zarr array](https://zarr.readthedocs.io/en/stable/api/core.html), and many others.
+
+For example, you could explicitly load a 3D image using the `tifffile` library and then use the `add_image()` method of our existing `Viewer` object named `viewer`.
+
+```Python
+import napari
+from tifffile import imread
+
+# load the image data using tifffile
+nuclei = imread('data/nuclei.tif')
+viewer.add_image(nuclei)
+```
+
+However, here, for simplicity, we will use the [`cells3d` dataset, provided by scikit-image](https://scikit-image.org/docs/stable/api/skimage.data.html#skimage.data.cells3d).
 
 ```{code-cell} ipython3
 from skimage.data import cells3d
@@ -48,16 +83,23 @@ image_data = cells3d()  # shape (60, 2, 256, 256)
 membranes = image_data[:, 0, :, :]
 nuclei = image_data[:, 1, :, :]
 
-viewer.add_image(nuclei, colormap="green")
+viewer.add_image(nuclei, colormap='green')
 ```
 
 ```{code-cell} ipython3
 nbscreenshot(viewer)
 ```
 
+````{tip}
+Once you have the data loaded as a layer, you can set pixel spacing using the `scale` property of the layer, e.g.:
+```python
+viewer.layers['nuclei'].scale = (0.29, 0.26, 0.26)
+````
+
 ## Segmentation workflow
 
-Let's develop a segmentation workflow for the nuclei using processing utilities from scikit-image.
+Let's develop a segmentation workflow for the nuclei using processing utilities from [scikit-image](https://scikit-image.org).
+We'll import several useful modules:
 
 ```{code-cell} ipython3
 from skimage import feature
@@ -70,8 +112,8 @@ from scipy import ndimage
 import numpy as np
 ```
 
-First let's try and separate background from foreground using a threshold. Here we'll use an 
-automatically calculated threshold using the [Li method](https://scikit-image.org/docs/dev/auto_examples/developers/plot_threshold_li.html), but feel free to substitute a different method if you prefer, like Otsu. For more information about available `skimage` thresholding methods, see the [thresholding documentation](https://scikit-image.org/docs/stable/auto_examples/applications/plot_thresholding_guide.html).
+First let's try and separate background from foreground using a threshold. Here we'll use an
+automatically calculated threshold using the [Li method](https://scikit-image.org/docs/stable/auto_examples/developers/plot_threshold_li.html), but feel free to substitute a different method if you prefer, like Otsu (`threshold_otsu`). For more information about available `skimage` thresholding methods, see the [thresholding documentation](https://scikit-image.org/docs/stable/auto_examples/applications/plot_thresholding_guide.html).
 
 ```{code-cell} ipython3
 foreground = nuclei >= filters.threshold_li(nuclei)
@@ -86,7 +128,7 @@ nbscreenshot(viewer)
 We applied the threshold to the `nuclei` array, but we could have also used the data backing the `nuclei` Image layer in the viewer: `viewer.layers['nuclei'].data`. Further, when adding a layer using one of the `add` methods, we can assign the return to a variable to make accessing the layer easier in the future. For example, for the case of the "foreground" labels layer we could use, e.g. `fg_layer = viewer.add_labels(foreground)`. Then we can use `fg_layer.data` to access the data in the layer.
 ```
 
-Now we can see that the image has some noise, which is reflected in the threshold output so lets apply a Gaussian blur to smooth it. You can of course use any other smoothing filter, such as a median filter. `napari` makes it easy to compare multiple outputs by toggling the visibility of the layers in the viewer.
+Now we can see that the image has some noise, which is reflected in the threshold output so lets apply a [Gaussian blur](https://scikit-image.org/docs/stable/api/skimage.filters.html#skimage.filters.gaussian) to smooth it. You can of course use any other smoothing filter, such as a [median filter](https://scikit-image.org/docs/stable/api/skimage.filters.html#skimage.filters.median). `napari` makes it easy to compare multiple outputs by toggling the visibility of the layers in the viewer.
 
 ```{code-cell} ipython3
 blur = filters.gaussian(nuclei, sigma=3, preserve_range=True)
@@ -100,26 +142,26 @@ nbscreenshot(viewer)
 ```
 
 ```{tip}
-If you get overwhelmed, remember that you can toggle the visibility of layers! 
-In the GUI you can click the eye icon to show/hide that layer or Alt/Option-click to toggle showing *only* that layer.  
-You can also hide layers programmatically by setting the `visible` attribute of the layer to `False`, e.g. `viewer.layers['foreground'].visible = False`.  
+If you get overwhelmed, remember that you can toggle the visibility of layers!
+In the GUI you can click the eye icon to show/hide that layer or Alt/Option-click to toggle showing *only* that layer.
+You can also hide layers programmatically by setting the `visible` attribute of the layer to `False`, e.g. `viewer.layers['foreground'].visible = False`.
 Finally, you can also remove layers from the viewer programmatically using the `remove` method and passing a layer you want to remove, e.g. `viewer.layers.remove(viewer.layers['foreground'])`, or by index using the `pop` method, e.g. `viewer.layers.pop(1)` to remove the second layer from the bottom (remember that the first layer is at index 0!).
 ```
 
-Notice that there is still some signal from outside the nuclei and there are some holes located 
+Notice that there is still some signal from outside the nuclei and there are some holes located
 inside the nuclei. We can use some morphological operators to clean this up. First we will do an
-opening operation, which will first erode the image and then dilate it. Then, we will fill the 
-holes using a hole filling algorithm and then remove any small objects. 
+opening operation, which will first erode the image and then dilate it. Then, we will fill the
+holes using a hole filling algorithm and then remove any small objects.
 
 ```{tip}
-We could update the layer data in the viewer *in place* if we didn't want to create another 
+We could update the layer data in the viewer *in place* if we didn't want to create another
 object or another layer.
 ```
 
 ```{code-cell} ipython3
 foreground_processed = morphology.binary_opening(foreground_blur)
 foreground_processed = morphology.remove_small_holes(foreground_processed, area_threshold = 20**3)
-foreground_processed = morphology.remove_small_objects(foreground_processed, min_size=20**3)    
+foreground_processed = morphology.remove_small_objects(foreground_processed, min_size=20**3)
 viewer.add_labels(foreground_processed)
 ```
 
@@ -127,9 +169,9 @@ viewer.add_labels(foreground_processed)
 nbscreenshot(viewer)
 ```
 
-Feel free to play around with the parameters of the morphological operations to see how they affect the segmentation.  
+Feel free to play around with the parameters of the morphological operations to see how they affect the segmentation.
 
-We will now convert this binary mask into an **instance segmentation** where each nuclei is assigned a unique label by using connected-components labeling, as implemented in [`skimage`](https://scikit-image.org/docs/dev/api/skimage.measure.html#skimage.measure.label).
+We will now convert this binary mask into an **instance segmentation** where each nuclei is assigned a unique label by using connected-components labeling, as implemented in [`skimage`](https://scikit-image.org/docs/stable/api/skimage.measure.html#skimage.measure.label).
 
 ```{code-cell} ipython3
 from skimage import measure
@@ -146,13 +188,13 @@ viewer.add_labels(
 nbscreenshot(viewer)
 ```
 
-As you can see, we have all the objects labeled, but touching objects are not separated. To do this, 
-we can use a [**marker controlled watershed** approach](https://scikit-image.org/docs/dev/api/skimage.segmentation.html#skimage.segmentation.watershed). But to use this we will need to choose some locations for the markers.
+As you can see, we have all the objects labeled, but touching objects are not separated. To do this,
+we can use a [**marker controlled watershed** approach](https://scikit-image.org/docs/stable/api/skimage.segmentation.html#skimage.segmentation.watershed). But to use this we will need to choose some locations for the markers.
 
-There are a number of strategies that you can use to choose marker locations for the watershed step. Here we will use the distance transform of the binary mask and place markers at the local maxima of that. 
+There are a number of strategies that you can use to choose marker locations for the watershed step. Here we will use the distance transform of the binary mask and place markers at the local maxima of that.
 
 ```{note}
-Instead of computing the marker locations programmatically, you could instead use the GUI tools to add points to a Points layer.
+Instead of computing the marker locations programmatically, you could instead use the GUI tools to add points to a Points layer!
 ```
 
 The first step in this procedure is to calculate a distance transform on the binary mask as follows.
@@ -166,7 +208,7 @@ viewer.add_image(distance)
 nbscreenshot(viewer)
 ```
 
-Let's also compute a smoothed version of the distance transform, as it turns out this is beneficial to avoid over-segmentation. 
+Let's also compute a smoothed version of the distance transform, as it turns out this is beneficial to avoid over-segmentation.
 In this case, we will do this on the data in the viewer, in-place, rather than creating a yet a new layer, but if you wanted to explore this in more detail, you could create a new layer with the smoothed transform. Feel free to adjust the `sigma` parameter to see how it affects the segmentation.
 
 ```{code-cell} ipython3
@@ -200,8 +242,8 @@ nbscreenshot(viewer)
 If you don't see any points, you may need to use the slider to look at other z-slices of the image or switch to 3D view. You can also click the `out of slice` option in the Points layer controls, which will show points in adjacent slices based on their diameters.
 ```
 
-We can now remove any of the points that don't correspond to nuclei centers or add any new ones using 
-the GUI Points layer tools. Or we could select a point using the GUI tools, but remove it 
+We can now remove any of the points that don't correspond to nuclei centers or add any new ones using
+the GUI Points layer tools. Or we could select a point using the GUI tools, but remove it
 programmatically—or some combination of both.
 
 ```{code-cell} ipython3
@@ -225,8 +267,8 @@ Now that we have our markers, we can proceed with the watershed.
 
 ```{code-cell} ipython3
 nuclei_segmentation = segmentation.watershed(
-    -smoothed_distance, 
-    markers, 
+    -smoothed_distance,
+    markers,
     mask=foreground_processed
 )
 
@@ -286,12 +328,6 @@ This will set the `color mode` of the Labels layer to `direct`, meaning that the
 nbscreenshot(viewer)
 ```
 
-Finally, lets also add all of the computed properties to the segmentation layer. Layer `features` store a table or data frame where each column represents a feature and each row represents a label (or Point or Shape). Importantly, `features` will be displayed in the status bar when you mouse over a label.
-
-```{code-cell} ipython3
-viewer.layers['nuclei_segmentation'].features = info_table
-```
-
 ````{tip}
 An alternative to visualizing the measurements by mapping them onto the labels is to use the helper function [`map_array` from `skimage.util`](https://github.com/scikit-image/scikit-image/blob/main/skimage/util/_map_array.py#L4-L73). This function will create a new array where each label is replaced by the corresponding value from the provided mapping. This can then be added as a new image layer in the viewer!
 
@@ -302,7 +338,19 @@ viewer.add_image(map_array(input_arr=nuclei_segmentation, input_vals=info_table[
 ```
 ````
 
+Finally, lets also add all of the computed properties to the segmentation layer. Layer `features` store a table or data frame where each column represents a feature and each row represents a label (or Point or Shape). Importantly, `features` will be displayed in the status bar when you mouse over a label.
+
+```{code-cell} ipython3
+viewer.layers['nuclei_segmentation'].features = info_table
+```
+
+You can explore the layer `features` within napari using the Layer Features Table widget. Access it using the menu: **Layers > Visualize > Features table widget** or programmatically using:
+
+```{code-cell} ipython3
+viewer.window.add_plugin_dock_widget('napari', 'Features table widget')
+```
+
 ## Conclusions
 
 We've now seen how to interactively perform analyses by adding data to the napari viewer and exploring different filters or workflow parameters as we moved through an analysis workflow. We've also seen how we can visualize derived data, such as segmentation results or measurements, in the viewer.
-This is a powerful way to explore data and develop analysis workflows, as it allows you to quickly iterate on your analysis and visualize the results in real-time.
+This is a powerful way to explore data and develop analysis workflows, as it allows you to quickly iterate on your analysis and visualize the results in real-time. By using a Jupyter notebook, you will have a record of the process, including images of the napari viewer state thanks to `nbscreenshot`.
