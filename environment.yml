@@ -8,4 +8,4 @@ dependencies:
   - jupyterlab-myst
   - napari
   - pyqt
-  - jupyter-book
+  - jupyter-book<2

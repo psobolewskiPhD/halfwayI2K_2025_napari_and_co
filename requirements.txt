@@ -1,4 +1,4 @@
-jupyter-book
+jupyter-book<2
 jupyterlab
 jupytext
 jupyterlab-myst
