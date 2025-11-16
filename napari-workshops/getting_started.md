@@ -20,7 +20,7 @@ Before the workshop, please ensure you have a running napari installation. We re
 ## Workshop content
 
 The executed and rendered notebooks are [included in this repository](notebooks/index.md). We strongly encourage you to follow along with your own, fresh notebook. However, if you would like to down load and execute the completed notebooks locally, please see [the instructions here](notebook_setup.md). Alternately, you can install the `napari-workshop-browser` plugin and paste the following:
-`https://github.com/TheJacksonLaboratory/intro-napari-workshop/archive/refs/heads/main.zip`
+`https://github.com/psobolewskiPhD/halfwayI2K_2025_napari_and_co/archive/refs/heads/main.zip`
 
 This will allow you to follow along with the notebooks used in the second session without needing to write code.
 Finally, the completed notebooks can also be run in the cloud [using Binder](launching_binder.md).

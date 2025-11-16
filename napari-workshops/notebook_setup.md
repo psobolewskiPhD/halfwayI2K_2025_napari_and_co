@@ -17,7 +17,7 @@ either downloading a .zip file (recommended for beginners) or cloning via git.
 ### Downloading a .zip file
 To download the notebooks as a .zip file, do the following:
 
-1. Click the GitHub logo at the top of this page or navigate your web browser to [the workshop's github repository](https://github.com/TheJacksonLaboratory/intro-napari-workshop): https://github.com/TheJacksonLaboratory/intro-napari-workshop
+1. Click the GitHub logo at the top of this page or navigate your web browser to [the workshop's github repository](https://github.com/psobolewskiPhD/halfwayI2K_2025_napari_and_co): https://github.com/psobolewskiPhD/halfwayI2K_2025_napari_and_co
 2. Click the green (or blue) "Code" button to open the download menu and then
    "Download ZIP" ![download code](./resources/download_code.png)
 3. Choose the location you would like to download the .zip into.
@@ -29,7 +29,7 @@ To download the notebooks as a .zip file, do the following:
 To clone the repository containing the tutorial materials to your computer, open
 your Terminal and navigate to the folder where you will download the course
 materials into. We recommend cloning the materials into your Documents folder,
-but you can choose another suitable location. 
+but you can choose another suitable location.
 
  ```bash
  cd ~/Documents
@@ -39,7 +39,7 @@ Then, clone the repository. This will download all of the files necessary for
 this tutorial.
 
  ```bash
- git clone https://github.com/TheJacksonLaboratory/intro-napari-workshop.git
+ git clone https://github.com/psobolewskiPhD/halfwayI2K_2025_napari_and_co.git
  ```
 
 ## Install additional `jupytext` dependency
@@ -52,7 +52,7 @@ you need to install additional dependencies to run them locally.
 Remember to activate the right environment!
 
 ```bash
-conda activate intro-napari-workshop
+conda activate napari-I2K-workshop
 ```
 ````
 
@@ -64,16 +64,16 @@ conda install jupytext jupyterlab-myst
 ## Launch the `jupyter lab` application
 
 Navigate to the `notebooks` subdirectory of the
-`intro-napari-workshop` directory you just downloaded.
+`halfwayI2K_2025_napari_and_co` directory you just downloaded.
 
 ```
-cd <path to intro-napari-workshop>/notebooks
+cd <path to halfwayI2K_2025_napari_and_co>/notebooks
 ```
 
-Remember to activate the `intro-napari-workshop` conda environment if you haven't already.
+Remember to activate the `napari-I2K-workshop` conda environment if you haven't already.
 
 ```bash
-conda activate intro-napari-workshop
+conda activate napari-I2K-workshop
 ```
 
 To start the Jupyter application, enter:
