@@ -30,7 +30,7 @@ The data were downloaded from the
 Following this activity, we will use the workflow generated in this activity to
 create a napari spot detection widget or even plugin.
 
-## `binder` setup
+## (Optional) Preparing to run this notebook on mybinder.org
 
 ```{code-cell} ipython3
 :tags: [remove-output]
@@ -43,7 +43,7 @@ if 'BINDER_SERVICE_HOST' in os.environ:
 
 ## Screenshots
 As previously, we will use the `nbscreenshot` to document our work in the notebook as we go along.
-As a reminder, the usage is: 
+As a reminder, the usage is:
 
 ```Python
 nbscreenshot(viewer)
@@ -87,7 +87,7 @@ viewer.add_image(spots, colormap='magenta', blending='additive')
 ```
 
 After loading the data, inspect it in the viewer and adjust the
-layer settings to your liking (e.g., contrast limits, colormap). 
+layer settings to your liking (e.g., contrast limits, colormap).
 You can pan/zoom around the image by click/dragging to pan and scrolling with your
 mousewheel or trackpad to zoom.
 
@@ -181,8 +181,8 @@ blobs_log = blob_log(
     high_passed_spots, max_sigma=3,
     threshold=None,  # use a relative threshold instead
     threshold_rel=0.2)
-    
-# convert the output of the blob detector to the 
+
+# convert the output of the blob detector to the
 # desired points_coords and sizes arrays
 # (see the docstring for details)
 spot_coords = blobs_log[:, 0:2]
@@ -218,12 +218,12 @@ nbscreenshot(viewer)
 ## Optional: using Points layer `features`
 
 `features` is a table associated with a Points layer that can store additional data associated with
-a data point. It has one row per data element (Point) and one column per feature. This would enable you 
-to add other attributes like `volume` or `maximum-intensity` should you calculate those for each cell. 
-Importantly, napari can not only display the values of associated features in the status bar, but 
-also use them for styling, e.g. for `face_color`. For more information, see the 
-[Points layer guide](https://napari.org/stable/howtos/layers/points.html#using-the-points-features-table), 
-[the Points annotation tutorial](https://napari.org/stable/tutorials/annotation/annotate_points.html) 
+a data point. It has one row per data element (Point) and one column per feature. This would enable you
+to add other attributes like `volume` or `maximum-intensity` should you calculate those for each cell.
+Importantly, napari can not only display the values of associated features in the status bar, but
+also use them for styling, e.g. for `face_color`. For more information, see the
+[Points layer guide](https://napari.org/stable/howtos/layers/points.html#using-the-points-features-table),
+[the Points annotation tutorial](https://napari.org/stable/tutorials/annotation/annotate_points.html)
 or the ["Add points with features" Gallery example](https://napari.org/stable/gallery/add_points_with_features.html#sphx-glr-gallery-add-points-with-features-py).
 
 
@@ -260,9 +260,19 @@ viewer.layers['spot_coords'].refresh_colors()
 nbscreenshot(viewer)
 ```
 
+You can explore the layer `features` within napari using the Layer Features Table widget. Access it using the menu: **Layers > Visualize > Features table widget** or programmatically using:
+
+```{code-cell} ipython3
+viewer.window.add_plugin_dock_widget('napari', 'Features table widget')
+```
+
+```{tip}
+Try interacting with the Feature table widget; watch the selection change in the Points layer!
+```
+
 ## Conclusion
 In this activity, we have developed done the exploratory analysis for spot detection
 using a combination of Jupyter notebook, scipy, scikit-image, and napari. In the
-next activity, we will convert this workflow into a spot detection function to make 
+next activity, we will convert this workflow into a spot detection function to make
 it easier to explore the effect of parameters. Then, we will turn that into a napari widget
 using `magicgui`.
