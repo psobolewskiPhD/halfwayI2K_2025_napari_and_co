@@ -55,6 +55,14 @@ nbscreenshot(viewer)
 
 By default, this will capture and embed the entire viewer. However, if you only want to capture the canvas, you can pass `canvas_only=True` to the function.
 
+```{tip}
+If you want to save the screenshot as a file, you can use the `screenshot` method of the Viewer, for example:
+```python
+viewer.screenshot('screenshot.png')
+```
+Note: this method has the argument `canvas_only` as `True` by default.
+```
+
 ## Loading image data
 
 napari can take any NumPy-like array as input for its image layer, for example a
