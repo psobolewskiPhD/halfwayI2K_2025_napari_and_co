@@ -358,6 +358,10 @@ You can explore the layer `features` within napari using the Layer Features Tabl
 viewer.window.add_plugin_dock_widget('napari', 'Features table widget')
 ```
 
+```{tip}
+Try checking the `show selected` checkbox in the Labels layer controls. Then try interacting with the Feature table widget!
+```
+
 ## Conclusions
 
 We've now seen how to interactively perform analyses by adding data to the napari viewer and exploring different filters or workflow parameters as we moved through an analysis workflow. We've also seen how we can visualize derived data, such as segmentation results or measurements, in the viewer.
