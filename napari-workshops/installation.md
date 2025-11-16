@@ -10,12 +10,12 @@ For the purposes of this workshop, you will need an environment with Python, nap
 **If you are not comfortable with Python and the command line**, or just want to get started quickly,you can [install and use the napari bundled application](https://napari.org/stable/tutorials/fundamentals/installation_bundle_conda.html), instead of following the remaining instructions on this page.
 To to follow along with the notebooks without needing to write code, you will also need to install the `napari-workshop-browser` plugin:
 
-* In napari, open the menu**Plugins**>**Install/Uninstall Plugins...**
+* In napari, open the menu: **Plugins**>**Install/Uninstall Plugins...**
 * Search for **workshop** in the top search/filter bar, and then, in the bottom pane, you will see all of the plugins that match this search term.
 * Click the blue install button to install the **Napari Workshop Browser** plugin.
 * Once installed, go to the menu **Plugins**>**Open a napari workshop** to open the widget.
 * To download the correct notebooks, **delete the pre-filled URL** in the widget and copy-paste the following URL instead:
-`https://github.com/psobolewskiPhD/halfwayI2K_2025_napari_and_co/archive/refs/heads/main.zip`
+[https://github.com/psobolewskiPhD/halfwayI2K_2025_napari_and_co/archive/refs/heads/main.zip](https://github.com/psobolewskiPhD/halfwayI2K_2025_napari_and_co/archive/refs/heads/main.zip)
 * Click the `Launch Workshop` button. This will **hide the running napari application**, download the notebooks, and open a Jupyter session in your browser with the notebooks ready to go.
 * When you are finished with the notebooks, to return to napari, click the `Quit` button at the top of the **first Jupyter browser tab** that has the listing of all of the notebooks. Then you can restore the original napari window and keep using it or quit napari.
 ```
